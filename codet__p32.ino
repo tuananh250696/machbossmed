@@ -18,7 +18,8 @@ String i;
 int n=0; 
 int  a1=0,a2=0,a3=0,a4=0,a5=0,a6=0;
 int  tem1=30,tem22=30;
-int  aa1=0,aa2=0,aa3=0,aa4=0,aa5=0,aa6=0;
+int  aa1=0,aa2=0,a33=0,aa4=0,aa5=0,aa6=0;
+int  a333=0;
 int lamp1=0,lamp2=0,lamp11=0,lamp22=0,lp1,lp2=0;
 int h1=0,m1=0,h2=0,m2=0,h3,m3,kk=1,ht1,mt1,ht2,mt2,ht3,mt3;
 int Celcius=0;
@@ -73,7 +74,7 @@ void setup() {
   ledcAttachPin(16, 6);
   ledcAttachPin(17, 7);
 
-  ledcSetup(1, 2000, 8); // 12 kHz PWM, 12-bit resolution
+  ledcSetup(1, 1000, 8); // 12 kHz PWM, 12-bit resolution
   ledcSetup(2, 2000, 8); // 12 kHz PWM, 12-bit resolution
   ledcSetup(3, 2000, 8); // 12 kHz PWM, 12-bit resolution
   ledcSetup(4, 2000, 8); // 12 kHz PWM, 12-bit resolution
@@ -120,21 +121,8 @@ void Task1code( void * pvParameters ){
    Serial2.write(0xff);  // We always have to send this three lines after each command sent to the nextion display.
    Serial2.write(0xff);
    Serial2.write(0xff);
-   Serial2.print("n13.val=");  // This is sent to the nextion display to set what object name (before the dot) and what atribute (after the dot) are you going to change.
-   Serial2.print(RTC.getHours());
-   Serial2.write(0xff);  // We always have to send this three lines after each command sent to the nextion display.
-   Serial2.write(0xff);
-   Serial2.write(0xff);
-   Serial2.print("n14.val=");  // This is sent to the nextion display to set what object name (before the dot) and what atribute (after the dot) are you going to change.
-   Serial2.print(RTC.getMinutes());
-   Serial2.write(0xff);  // We always have to send this three lines after each command sent to the nextion display.
-   Serial2.write(0xff);
-   Serial2.write(0xff);
+   delay(500);
 
-  // Serial.print(potValue1);
-   delay(1000);
-    //vTaskDelay(1);
-   
 if (temperatureC>=tt)
   {
 
@@ -145,7 +133,7 @@ if (temperatureC<tt)
    ledcWrite(4, 255);
   } 
 
- if (potValue1 > 240) 
+ if (potValue1 > 1600) 
     {  
        Serial2.print("p9.pic=4");  // This is sent to the nextion display to set what object name (before the dot) and what atribute (after the dot) are you going to change.
         Serial2.write(0xff);  // We always have to send this three lines after each command sent to the nextion display.
@@ -154,33 +142,87 @@ if (temperatureC<tt)
         digitalWrite(25,0);
         
     }
-  if (potValue1 <=240) 
+  if (potValue1 <=1600) 
     {
        digitalWrite(25, HIGH);
        Serial2.print("p9.pic=5");  // This is sent to the nextion display to set what object name (before the dot) and what atribute (after the dot) are you going to change.
        Serial2.write(0xff);  // We always have to send this three lines after each command sent to the nextion display.
        Serial2.write(0xff);
        Serial2.write(0xff);       
-    }  
+    }   
+    
    ht3= (RTC.getHours()*60)+RTC.getMinutes();
    ht1= (h1*60)+m1;
    ht2= (h2*60)+m2;
-   if (ht1<= ht3 <ht2 )
-    {
+   
+   int hs=(ht2-ht3)/60;
+   int ms= (( ht2-ht3)%60);
+   int he= ( ht1-ht3)/60;
+   int me= (( ht1-ht3)%60);
+
+   if (ht1<=ht3 && ht3<ht2 )
+    { 
+      Serial2.print("n15.val=");  // This is sent to the nextion display to set what object name (before the dot) and what atribute (after the dot) are you going to change.
+      Serial2.print(hs);
+      Serial2.write(0xff);  // We always have to send this three lines after each command sent to the nextion display.
+      Serial2.write(0xff);
+      Serial2.write(0xff);
+      Serial2.print("n16.val=");  // This is sent to the nextion display to set what object name (before the dot) and what atribute (after the dot) are you going to change.
+      Serial2.print(ms);
+      Serial2.write(0xff);  // We always have to send this three lines after each command sent to the nextion display.
+      Serial2.write(0xff);
+      Serial2.write(0xff);
       digitalWrite(33, HIGH);
+    
+      Serial2.print("p8.pic=15");  // This is sent to the nextion display to set what object name (before the dot) and what atribute (after the dot) are you going to change.
+      Serial2.write(0xff);  // We always have to send this three lines after each command sent to the nextion display.
+      Serial2.write(0xff);
+      Serial2.write(0xff); 
+      
  
     }
-   if (ht1>ht3 || ht3>=ht2 )
+   if (ht1>ht3 && ht2>ht1 )
+
     {
-      digitalWrite(33, 0);
+      Serial2.print("n15.val=");  // This is sent to the nextion display to set what object name (before the dot) and what atribute (after the dot) are you going to change.
+      Serial2.print(he);
+      Serial2.write(0xff);  // We always have to send this three lines after each command sent to the nextion display.
+      Serial2.write(0xff);
+      Serial2.write(0xff);
+      Serial2.print("n16.val=");  // This is sent to the nextion display to set what object name (before the dot) and what atribute (after the dot) are you going to change.
+      Serial2.print(me);
+      Serial2.write(0xff);  // We always have to send this three lines after each command sent to the nextion display.
+      Serial2.write(0xff);
+      Serial2.write(0xff);
+      Serial2.print("p8.pic=16");  // This is sent to the nextion display to set what object name (before the dot) and what atribute (after the dot) are you going to change.
+      Serial2.write(0xff);  // We always have to send this three lines after each command sent to the nextion display.
+      Serial2.write(0xff);
+      Serial2.write(0xff); 
+      digitalWrite(33,0);
+   
  
     }
-  if (ht1==ht3==ht2 )
+    if ( ht3>=ht2 )
     {
+      Serial2.print("n15.val=0");  // This is sent to the nextion display to set what object name (before the dot) and what atribute (after the dot) are you going to change.
+      //Serial2.print(he);
+      Serial2.write(0xff);  // We always have to send this three lines after each command sent to the nextion display.
+      Serial2.write(0xff);
+      Serial2.write(0xff);
+      Serial2.print("n16.val=0");  // This is sent to the nextion display to set what object name (before the dot) and what atribute (after the dot) are you going to change.
+      //Serial2.print(me);
+      Serial2.write(0xff);  // We always have to send this three lines after each command sent to the nextion display.
+      Serial2.write(0xff);
+      Serial2.write(0xff);
+     
+     Serial2.print("p8.pic=16");  // This is sent to the nextion display to set what object name (before the dot) and what atribute (after the dot) are you going to change.
+      Serial2.write(0xff);  // We always have to send this three lines after each command sent to the nextion display.
+      Serial2.write(0xff);
+      Serial2.write(0xff); 
       digitalWrite(33, 0);
- 
+
     }
-  }
+   }
   }
 //Task2code: blinks an LED every 700 ms
 void Task2code( void * pvParameters ){
@@ -191,16 +233,61 @@ void Task2code( void * pvParameters ){
    if (Serial2.available() > 0) 
     {
        i = Serial2.read();
-        Serial.print(i);
-      // Serial.print(potValue1);
+      //Serial.print(i);
 
+      if(i=="103")
+      { 
+      
+        RTC.setTime(0,0,50);
+        Serial2.print("n1.val=");  // This is sent to the nextion display to set what object name (before the dot) and what atribute (after the dot) are you going to change.
+        Serial2.print(lamp11);
+        Serial2.write(0xff);  // We always have to send this three lines after each command sent to the nextion display.
+        Serial2.write(0xff);
+        Serial2.write(0xff);
+
+        Serial2.print("n2.val=");  // This is sent to the nextion display to set what object name (before the dot) and what atribute (after the dot) are you going to change.
+        Serial2.print(lamp22);
+        Serial2.write(0xff);  // We always have to send this three lines after each command sent to the nextion display.
+        Serial2.write(0xff);
+        Serial2.write(0xff);
+
+        Serial2.print("n3.val=");  // This is sent to the nextion display to set what object name (before the dot) and what atribute (after the dot) are you going to change.
+        Serial2.print(aa2);
+        Serial2.write(0xff);  // We always have to send this three lines after each command sent to the nextion display.
+        Serial2.write(0xff);
+        Serial2.write(0xff);
+
+        Serial2.print("n4.val=");  // This is sent to the nextion display to set what object name (before the dot) and what atribute (after the dot) are you going to change.
+        Serial2.print(a33);
+        Serial2.write(0xff);  // We always have to send this three lines after each command sent to the nextion display.
+        Serial2.write(0xff);
+        Serial2.write(0xff);
+
+        Serial2.print("n6.val=");  // This is sent to the nextion display to set what object name (before the dot) and what atribute (after the dot) are you going to change.
+        Serial2.print(aa1);
+        Serial2.write(0xff);  // We always have to send this three lines after each command sent to the nextion display.
+        Serial2.write(0xff);
+        Serial2.write(0xff);
+   
+        Serial2.print("n7.val=");  // This is sent to the nextion display to set what object name (before the dot) and what atribute (after the dot) are you going to change.
+        Serial2.print(tt);
+        Serial2.write(0xff);  // We always have to send this three lines after each command sent to the nextion display.
+        Serial2.write(0xff);
+        Serial2.write(0xff);
+     
+      }
+      /*
    if(i=="48")
       { 
-   ledcWrite(3, 255);
+   ledcWrite(3, a3);
       }
-
+   */
    if(i=="49")
       { 
+    Serial2.print("n4.val=0");  // This is sent to the nextion display to set what object name (before the dot) and what atribute (after the dot) are you going to change.
+    Serial2.write(0xff);  // We always have to send this three lines after each command sent to the nextion display.
+    Serial2.write(0xff);
+    Serial2.write(0xff);
     ledcWrite(3, 0);
       }
    if(i=="50")
@@ -230,21 +317,18 @@ void Task2code( void * pvParameters ){
         Serial2.write(0xff);
         Serial2.write(0xff);
       }
-   if(i=="51")                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                         
-      { 
-      //digitalWrite(33, 0);
-      }
+   
 
     if(i=="86")
       { 
-      digitalWrite(25, HIGH);
+      
       //  vTaskDelay(40/portTICK_PERIOD_MS ); 
         Serial2.print("n1.val=");  // This is sent to the nextion display to set what object name (before the dot) and what atribute (after the dot) are you going to change.
         Serial2.print(lamp11);
         Serial2.write(0xff);  // We always have to send this three lines after each command sent to the nextion display.
         Serial2.write(0xff);
         Serial2.write(0xff);
-      digitalWrite(25, 0);
+     
       }
       //
       if(i=="84")
@@ -271,13 +355,13 @@ void Task2code( void * pvParameters ){
        
         if(0>h1)
         {
-       h1=0;
+       h1=23;
        
         }
       
-        if(h1>24)
+        if(h1>=24)
        {
-        h1=24;  
+        h1=0;  
         }
         Serial2.print("n0.val=");  // This is sent to the nextion display to set what object name (before the dot) and what atribute (after the dot) are you going to change.
         Serial2.print(h1);
@@ -293,13 +377,13 @@ void Task2code( void * pvParameters ){
        
         if(0>h1)
         {
-       h1=0;
+       h1=23;
        
         }
       
-        if(h1>24)
+        if(h1>=24)
        {
-        h1=24;  
+        h1=0;  
         }
         Serial2.print("n0.val=");  // This is sent to the nextion display to set what object name (before the dot) and what atribute (after the dot) are you going to change.
         Serial2.print(h1);
@@ -307,20 +391,20 @@ void Task2code( void * pvParameters ){
         Serial2.write(0xff);
         Serial2.write(0xff);
       }
-
+  
      if(i=="82"&& kk==2)
       { 
          m1=m1-1;
        
         if(0>m1)
         {
-       m1=0;
+       m1=59;
        
         }
       
-        if(m1>60)
+        if(m1>=60)
        {
-        m1=60;  
+        m1=0;  
         }
         Serial2.print("n11.val=");  // This is sent to the nextion display to set what object name (before the dot) and what atribute (after the dot) are you going to change.
         Serial2.print(m1);
@@ -336,13 +420,13 @@ void Task2code( void * pvParameters ){
        
         if(0>m1)
         {
-       m1=0;
+       m1=59;
        
         }
       
-        if(m1>60)
+        if(m1>=60)
        {
-        m1=60;  
+        m1=0;  
         }
         Serial2.print("n11.val=");  // This is sent to the nextion display to set what object name (before the dot) and what atribute (after the dot) are you going to change.
         Serial2.print(m1);
@@ -357,13 +441,13 @@ void Task2code( void * pvParameters ){
        
         if(0>h2)
         {
-       h2=0;
+       h2=23;
        
         }
       
-        if(h2>24)
+        if(h2>=24)
        {
-        h2=24;  
+        h2=0;  
         }
         Serial2.print("n5.val=");  // This is sent to the nextion display to set what object name (before the dot) and what atribute (after the dot) are you going to change.
         Serial2.print(h2);
@@ -377,15 +461,15 @@ void Task2code( void * pvParameters ){
       
          h2=h2+1;
        
-        if(0>h2)
+      if(0>h2)
         {
-       h2=0;
+       h2=23;
        
         }
       
-        if(h2>24)
+        if(h2>=24)
        {
-        h2=24;  
+        h2=0;  
         }
         Serial2.print("n5.val=");  // This is sent to the nextion display to set what object name (before the dot) and what atribute (after the dot) are you going to change.
         Serial2.print(h2);
@@ -400,13 +484,13 @@ void Task2code( void * pvParameters ){
        
         if(0>m2)
         {
-       m2=0;
+       m2=59;
        
         }
       
-        if(m2>60)
+        if(m2>=60)
        {
-        m2=60;  
+        m2=0;  
         }
         Serial2.print("n12.val=");  // This is sent to the nextion display to set what object name (before the dot) and what atribute (after the dot) are you going to change.
         Serial2.print(m2);
@@ -422,13 +506,13 @@ void Task2code( void * pvParameters ){
        
         if(0>m2)
         {
-       m2=0;
+       m2=59;
        
         }
       
-        if(m2>60)
+        if(m2>=60)
        {
-        m2=60;  
+        m2=0;  
         }
         Serial2.print("n12.val=");  // This is sent to the nextion display to set what object name (before the dot) and what atribute (after the dot) are you going to change.
         Serial2.print(m2);
@@ -440,19 +524,19 @@ void Task2code( void * pvParameters ){
 
    if(i=="97")
       { 
-      digitalWrite(25, HIGH);
+      
      // vTaskDelay(40/portTICK_PERIOD_MS );
         Serial2.print("n7.val=");  // This is sent to the nextion display to set what object name (before the dot) and what atribute (after the dot) are you going to change.
         Serial2.print(tt);
         Serial2.write(0xff);  // We always have to send this three lines after each command sent to the nextion display.
         Serial2.write(0xff);
         Serial2.write(0xff);
-       digitalWrite(25, 0);
+       
       }
 
    if(i=="80")
       { 
-      digitalWrite(25, HIGH);
+      
       tt=tt-1;
        if(30>tt)
         {
@@ -470,11 +554,11 @@ void Task2code( void * pvParameters ){
         Serial2.write(0xff);  // We always have to send this three lines after each command sent to the nextion display.
         Serial2.write(0xff);
         Serial2.write(0xff);
-       digitalWrite(25, 0);
+     
       }
     if(i=="81")
       { 
-      digitalWrite(25, HIGH);
+  
       tt=tt+1;
        if(30>tt)
         {
@@ -492,62 +576,61 @@ void Task2code( void * pvParameters ){
         Serial2.write(0xff);  // We always have to send this three lines after each command sent to the nextion display.
         Serial2.write(0xff);
         Serial2.write(0xff);
-       digitalWrite(25, 0);
+   
       }
    if(i=="87")
       { 
-      digitalWrite(25, HIGH);
+     
      // vTaskDelay(40/portTICK_PERIOD_MS );
         Serial2.print("n2.val=");  // This is sent to the nextion display to set what object name (before the dot) and what atribute (after the dot) are you going to change.
         Serial2.print(lamp22);
         Serial2.write(0xff);  // We always have to send this three lines after each command sent to the nextion display.
         Serial2.write(0xff);
         Serial2.write(0xff);
-       digitalWrite(25, 0);
+       
       }
 
    if(i=="88")
       { 
-      digitalWrite(25, HIGH);
+      
      //  vTaskDelay(40/portTICK_PERIOD_MS );
         Serial2.print("n3.val=");  // This is sent to the nextion display to set what object name (before the dot) and what atribute (after the dot) are you going to change.
         Serial2.print(aa2);
         Serial2.write(0xff);  // We always have to send this three lines after each command sent to the nextion display.
         Serial2.write(0xff);
         Serial2.write(0xff);
-       digitalWrite(25, 0);
+       
       }
 
    if(i=="89")
       { 
-      digitalWrite(25, HIGH);
+      
      //  vTaskDelay(40/portTICK_PERIOD_MS );
          Serial2.print("n4.val=");  // This is sent to the nextion display to set what object name (before the dot) and what atribute (after the dot) are you going to change.
-        Serial2.print(aa3);
+        Serial2.print(a33);
         Serial2.write(0xff);  // We always have to send this three lines after each command sent to the nextion display.
         Serial2.write(0xff);
         Serial2.write(0xff);
-       digitalWrite(25, 0);
+       
       }
 
 
      if(i=="96")
       { 
-      digitalWrite(25, HIGH);
+      
      //  vTaskDelay(40/portTICK_PERIOD_MS );
-      //  mySerial.print("n6.val=");  // This is sent to the nextion display to set what object name (before the dot) and what atribute (after the dot) are you going to change.
+      Serial2.print("n6.val=");  // This is sent to the nextion display to set what object name (before the dot) and what atribute (after the dot) are you going to change.
         Serial2.print(aa1);
         Serial2.write(0xff);  // We always have to send this three lines after each command sent to the nextion display.
         Serial2.write(0xff);
         Serial2.write(0xff);
-       digitalWrite(25, 0);
+      
       }
 
       ///
-   if(i=="113"||i=="100")
+   if(i=="100")
       { 
-        
-       digitalWrite(25, HIGH);
+
      //  vTaskDelay(40/portTICK_PERIOD_MS );
        
         Serial2.print("n1.val=");  // This is sent to the nextion display to set what object name (before the dot) and what atribute (after the dot) are you going to change.
@@ -569,7 +652,7 @@ void Task2code( void * pvParameters ){
         Serial2.write(0xff);
 
         Serial2.print("n4.val=");  // This is sent to the nextion display to set what object name (before the dot) and what atribute (after the dot) are you going to change.
-        Serial2.print(aa3);
+        Serial2.print(a33);
         Serial2.write(0xff);  // We always have to send this three lines after each command sent to the nextion display.
         Serial2.write(0xff);
         Serial2.write(0xff);
@@ -585,136 +668,256 @@ void Task2code( void * pvParameters ){
         Serial2.write(0xff);  // We always have to send this three lines after each command sent to the nextion display.
         Serial2.write(0xff);
         Serial2.write(0xff);
-        digitalWrite(25, 0);
+        
         
        }
- //lamp1
-   if(i=="64")
+
+    if(i=="113")
       { 
-       digitalWrite(25, HIGH);
-        lamp1=lamp1-1;
-        
-        if(0>lamp1)
-        {
-       lamp1=0;
-       
-        }
-      
-        if(lamp1>10)
-       {
-        lamp1=10;  
-        }
+
      //  vTaskDelay(40/portTICK_PERIOD_MS );
-        //lamp11=(lamp1-1)*10;
-       Serial2.print("n1.val=");  // This is sent to the nextion display to set what object name (before the dot) and what atribute (after the dot) are you going to change.
+       
+        Serial2.print("n1.val=");  // This is sent to the nextion display to set what object name (before the dot) and what atribute (after the dot) are you going to change.
        Serial2.print(lamp11);
-       Serial2.write(0xff);  // We always have to send this three lines after each command sent to the nextion display.
-       Serial2.write(0xff);
-       Serial2.write(0xff);
-      digitalWrite(25, 0);
-       }
-       lamp11=(lamp1)*10;
- 
-    if(i=="65")
-       {
-        digitalWrite(25, HIGH);
-        lamp1=lamp1+1;
-        
-        if(0>lamp1)
-        {
-       lamp1=0;
-       
-        }
-      
-        if(lamp1>10)
-       {
-        lamp1=10;  
-        }
-     //   vTaskDelay(40/portTICK_PERIOD_MS );
-       // lamp11=(lamp1-1)*10;
-       Serial2.print("n1.val=");  // This is sent to the nextion display to set what object name (before the dot) and what atribute (after the dot) are you going to change.
-       Serial2.print(lamp11);
-       Serial2.write(0xff);  // We always have to send this three lines after each command sent to the nextion display.
-       Serial2.write(0xff);
-       Serial2.write(0xff);
-        digitalWrite(25, 0);    
-      }      
-    //lamp2
-   if(i=="66")
-      { 
-       digitalWrite(25, HIGH);
-       lamp2=lamp2 - 1;
-        if(0>lamp2)
-        {
-       lamp2=0;
-       
-        }
-      
-        if(lamp2>10)
-       {
-        lamp2=10;  
-        }
-    //   vTaskDelay(40/portTICK_PERIOD_MS );
-       
-      //  lamp22=lamp2*10;
-       Serial2.print("n2.val=");  // This is sent to the nextion display to set what object name (before the dot) and what atribute (after the dot) are you going to change.
-       Serial2.print(lamp22);
         Serial2.write(0xff);  // We always have to send this three lines after each command sent to the nextion display.
         Serial2.write(0xff);
         Serial2.write(0xff);
-        digitalWrite(25, 0);
-     
-       }
-       lamp22=lamp2*10;
- 
-    if(i=="67")
-       {
-        digitalWrite(25, HIGH);
-        lamp2=lamp2+1;
-        
-      if(0>lamp2)
-        {
-       lamp2=0;
-       
-        }
-      
-        if(lamp2>10)
-       {
-        lamp2=10;  
-        }
-     //  vTaskDelay(40/portTICK_PERIOD_MS );
-        
-        //lamp22=lamp2*10;
+
         Serial2.print("n2.val=");  // This is sent to the nextion display to set what object name (before the dot) and what atribute (after the dot) are you going to change.
         Serial2.print(lamp22);
         Serial2.write(0xff);  // We always have to send this three lines after each command sent to the nextion display.
         Serial2.write(0xff);
         Serial2.write(0xff);
-        digitalWrite(25, 0);
+
+        Serial2.print("n3.val=");  // This is sent to the nextion display to set what object name (before the dot) and what atribute (after the dot) are you going to change.
+        Serial2.print(aa2);
+        Serial2.write(0xff);  // We always have to send this three lines after each command sent to the nextion display.
+        Serial2.write(0xff);
+        Serial2.write(0xff);
+
+        Serial2.print("n4.val=");  // This is sent to the nextion display to set what object name (before the dot) and what atribute (after the dot) are you going to change.
+        Serial2.print(a33);
+        Serial2.write(0xff);  // We always have to send this three lines after each command sent to the nextion display.
+        Serial2.write(0xff);
+        Serial2.write(0xff);
+
+        Serial2.print("n6.val=");  // This is sent to the nextion display to set what object name (before the dot) and what atribute (after the dot) are you going to change.
+        Serial2.print(aa1);
+        Serial2.write(0xff);  // We always have to send this three lines after each command sent to the nextion display.
+        Serial2.write(0xff);
+        Serial2.write(0xff);
+   
+        Serial2.print("n7.val=");  // This is sent to the nextion display to set what object name (before the dot) and what atribute (after the dot) are you going to change.
+        Serial2.print(tt);
+        Serial2.write(0xff);  // We always have to send this three lines after each command sent to the nextion display.
+        Serial2.write(0xff);
+        Serial2.write(0xff);
+        
+        
+       }
+ //lamp1
+   if(i=="64")
+      { 
+       
+        lamp1=lamp1-1;
+ 
+        
+        if(lamp1>10)
+         {
+        lamp11=10;  
+        }
+
+        if(lamp1<0) 
+        {
+       lamp11=0;
+       lp2=0;
+       
+        }
+
+      if(0==lamp1)
+        {
+       lamp11=0;
+       lp2=0;
+       
+        } 
+      if(lamp1>0)
+        {
+      lamp11=(lamp1)*10;    
+      lp2=lamp11 * 2.55;
+       
+        }
+    
+    //lp2=lamp11 * 2.55;
+    ledcWrite(6, lp2);
+   // ledcWrite(6, lp2);
+    Serial2.print("n1.val=");  // This is sent to the nextion display to set what object name (before the dot) and what atribute (after the dot) are you going to change.
+    Serial2.print(lamp11);
+    Serial2.write(0xff);  // We always have to send this three lines after each command sent to the nextion display.
+    Serial2.write(0xff);
+    Serial2.write(0xff);
+
+       }
+      
+    
+    if(i=="65")
+       {
+       
+        lamp1=lamp1+1;
+
+        
+        if(lamp1>10)
+         {
+        lamp1=10;  
+        }
+
+        if(lamp1<0) 
+        {
+       lamp1=0;
+       lp2=0;
+       
+        }
+
+      if(0==lamp1)
+        {
+       lamp1=0;
+       lp2=0;
+       
+        } 
+      if(lamp1>0)
+        {
+      lamp11=(lamp1)*10;    
+      lp2=lamp11 * 2.55;
+       
+        }
+    
+    //lp2=lamp11 * 2.55;
+    ledcWrite(6, lp2);
+   // ledcWrite(6, lp2);
+    Serial2.print("n1.val=");  // This is sent to the nextion display to set what object name (before the dot) and what atribute (after the dot) are you going to change.
+    Serial2.print(lamp11);
+    Serial2.write(0xff);  // We always have to send this three lines after each command sent to the nextion display.
+    Serial2.write(0xff);
+    Serial2.write(0xff);
+      }      
+
+      
+    //lamp2
+   if(i=="66")
+      { 
+      
+       lamp2=lamp2-1;
+      
+    //   vTaskDelay(40/portTICK_PERIOD_MS );
+       
+      //  lamp22=lamp2*10;
+     
+        if(lamp2>10)
+       {
+        lamp2=10;  
+        }
+
+         if(0>lamp2)
+        {
+       lamp2=0;
+       
+        }
+
+      if(0==lamp2)
+        {
+       lamp22=0;
+       
+        } 
+      if(lamp2>0)
+        {
+       lamp22=(a3*5)+65;
+       
+        }
+    lamp22=(lamp2)*10;    
+    lp1=lamp22 * 2.55;
+    //lp2=lamp11 * 2.55;
+    ledcWrite(5, lp1);
+   // ledcWrite(6, lp2);
+
+    Serial2.print("n2.val=");  // This is sent to the nextion display to set what object name (before the dot) and what atribute (after the dot) are you going to change.
+    Serial2.print(lamp22);
+    Serial2.write(0xff);  // We always have to send this three lines after each command sent to the nextion display.
+    Serial2.write(0xff);
+    Serial2.write(0xff);
+       }
+       
+    
+    if(i=="67")
+       {
+        
+        lamp2=lamp2+1;
+     //  vTaskDelay(40/portTICK_PERIOD_MS );
+        
+        //lamp22=lamp2*10;
+      
+      if(lamp2>10)
+       {
+        lamp2=10;  
+        }
+
+         if(0>lamp2)
+        {
+       lamp2=0;
+       
+        }
+
+      if(0==lamp2)
+        {
+       lp1=0;
+       
+        } 
+      if(lamp2>0)
+        {
+      lamp22=(lamp2)*10;    
+      lp1=lamp22 * 2.55;
+   
+       
+        }
+      Serial2.print("n2.val=");  // This is sent to the nextion display to set what object name (before the dot) and what atribute (after the dot) are you going to change.
+        Serial2.print(lamp22);
+        Serial2.write(0xff);  // We always have to send this three lines after each command sent to the nextion display.
+        Serial2.write(0xff);
+        Serial2.write(0xff);
+    //lp2=lamp11 * 2.55;
+    ledcWrite(5, lp1);
+   // ledcWrite(6, lp2);
       
       }
       
-         
+    
   //dry
    if(i=="68")
       { 
-       digitalWrite(25, HIGH);
        EEPROM.write(1,EEPROM.read(1)-1);
         EEPROM.commit();
-        delay(5);
-        if(1>EEPROM.read(1))
+        //delay(5);
+        if(EEPROM.read(1)<1)
         {
        EEPROM.write(1,1);
        EEPROM.commit();
-        delay(5);
+       // delay(5);
        
         }
       
-        if(EEPROM.read(1)>11)
+      if(EEPROM.read(1)>11)
        {
         EEPROM.write(1,11); 
         EEPROM.commit();
-        delay(5); 
+       // delay(5); 
+        }
+      if(EEPROM.read(1)==1)
+       {
+         aa1=0;
+       // delay(5); 
+        }
+      if(EEPROM.read(1)>1)
+       {
+         aa1=(EEPROM.read(1)-1)*10;
+       // delay(5); 
         }
       //  vTaskDelay(40/portTICK_PERIOD_MS );
      /// aa1=(EEPROM.read(1)-1)*10;
@@ -723,34 +926,43 @@ void Task2code( void * pvParameters ){
         Serial2.write(0xff);  // We always have to send this three lines after each command sent to the nextion display.
         Serial2.write(0xff);
         Serial2.write(0xff);
-        digitalWrite(25, 0);
-       
-     
        }
 
-       aa1=(EEPROM.read(1)-1)*10;
-       EEPROM.commit();
-       delay(5);
+       
+      // delay(5);
     if(i=="69")
        {
-        digitalWrite(25, HIGH);
+        
         EEPROM.write(1,EEPROM.read(1)+1);
         EEPROM.commit();
-        delay(5);
-        if(1>EEPROM.read(1))
+       // delay(5);
+        if(EEPROM.read(1)<1)
         {
        EEPROM.write(1,1);
        EEPROM.commit();
-        delay(5);
+     //   delay(5);
        
         }
-      
-        if(EEPROM.read(1)>11)
+
+      if(EEPROM.read(1)>11)
        {
         EEPROM.write(1,11);  
         EEPROM.commit();
-        delay(5);
+       // delay(5);
         }
+
+        if(EEPROM.read(1)==1)
+       {
+         aa1=0;
+       // delay(5); 
+        }
+      if(EEPROM.read(1)>1)
+       {
+         aa1=(EEPROM.read(1)-1)*10;
+       // delay(5); 
+        }
+        
+       
      //  vTaskDelay(40/portTICK_PERIOD_MS );
        // aa1=(EEPROM.read(1)-1)*10;
         Serial2.print("n6.val=");  // This is sent to the nextion display to set what object name (before the dot) and what atribute (after the dot) are you going to change.
@@ -758,7 +970,7 @@ void Task2code( void * pvParameters ){
         Serial2.write(0xff);  // We always have to send this three lines after each command sent to the nextion display.
         Serial2.write(0xff);
        Serial2.write(0xff);
-       digitalWrite(25, 0);
+     
         
       }
         ///
@@ -766,223 +978,193 @@ void Task2code( void * pvParameters ){
  ////pump1
      if(i=="70")
       { 
-       digitalWrite(25, HIGH);
+       
        EEPROM.write(2,EEPROM.read(2)-1);
        EEPROM.commit();
-        delay(5);
-       if(1>EEPROM.read(2))
+ 
+       // delay(5);
+        if(1>EEPROM.read(2))
         {
        EEPROM.write(2,1);
        EEPROM.commit();
-        delay(5);
+     //   delay(5);
        
         }
-      
         if(EEPROM.read(2)>11)
        {
-        EEPROM.write(2,11);
+        EEPROM.write(2,11);  
         EEPROM.commit();
-        delay(5);  
+       // delay(5);
         }
-     //   vTaskDelay(40/portTICK_PERIOD_MS );
+
+        if(EEPROM.read(2)==1)
+       {
+         aa2=0;
+       // delay(5); 
+        }
+      if(EEPROM.read(2)>1)
+       {
+         aa2=(EEPROM.read(2)-1)*10;
+       // delay(5); 
+        }
         
+        
+  
       // aa2=(EEPROM.read(2)-1)*10;
         Serial2.print("n3.val=");  // This is sent to the nextion display to set what object name (before the dot) and what atribute (after the dot) are you going to change.
         Serial2.print(aa2);
         Serial2.write(0xff);  // We always have to send this three lines after each command sent to the nextion display.
         Serial2.write(0xff);
         Serial2.write(0xff);
-        digitalWrite(25, 0);
+
      
        }
      
-      aa2=(EEPROM.read(2)-1)*10;
-      EEPROM.commit();
-        delay(5);
+      
+       // delay(5);
     if(i=="71")
        {
-        digitalWrite(25, HIGH);
+    
         EEPROM.write(2,EEPROM.read(2)+1);
         EEPROM.commit();
-        delay(5);
-
-       if(1>EEPROM.read(2))
+      // delay(5);
+        if(1>EEPROM.read(2))
         {
        EEPROM.write(2,1);
        EEPROM.commit();
-        delay(5);
+     //   delay(5);
        
         }
-      
-        if(EEPROM.read(2)>11)
+          if(EEPROM.read(2)>11)
        {
-        EEPROM.write(2,11); 
+        EEPROM.write(2,11);  
         EEPROM.commit();
-        delay(5); 
+       // delay(5);
         }
-    //   vTaskDelay(40/portTICK_PERIOD_MS );
-       // aa2=(EEPROM.read(2)-1)*10;
+
+        if(EEPROM.read(2)==1)
+       {
+         aa2=0;
+       // delay(5); 
+        }
+      if(EEPROM.read(2)>1)
+       {
+         aa2=(EEPROM.read(2)-1)*10;
+       // delay(5); 
+        }
+        
+     
+  
+      // aa2=(EEPROM.read(2)-1)*10;
         Serial2.print("n3.val=");  // This is sent to the nextion display to set what object name (before the dot) and what atribute (after the dot) are you going to change.
         Serial2.print(aa2);
         Serial2.write(0xff);  // We always have to send this three lines after each command sent to the nextion display.
         Serial2.write(0xff);
-       Serial2.write(0xff);
-       digitalWrite(25, 0);
+        Serial2.write(0xff);
+      
+
       }
 
-     ///////////////// 
-   if(i=="72")
+
+  ////pump1
+     if(i=="72")
       { 
-       digitalWrite(25, HIGH);
-       EEPROM.write(3,EEPROM.read(3)-1);
-       EEPROM.commit();
-        delay(5);
        
-       if(1>EEPROM.read(3))
-        {
-       EEPROM.write(3,1);
-       EEPROM.commit();
-        delay(5);
-       
-        }
-      
-        if(EEPROM.read(3)>11)
-       {
-        EEPROM.write(3,11);  
-        EEPROM.commit();
-        delay(5);
-        }
-    //   vTaskDelay(40/portTICK_PERIOD_MS );
-      // aa3=(EEPROM.read(3)-1)*10;
-        Serial2.print("n4.val=");  // This is sent to the nextion display to set what object name (before the dot) and what atribute (after the dot) are you going to change.
-        Serial2.print(aa3);
-        Serial2.write(0xff);  // We always have to send this three lines after each command sent to the nextion display.
-        Serial2.write(0xff);
-        Serial2.write(0xff);
-        digitalWrite(25, 0);
-     
-       }
-     aa3=(EEPROM.read(3)-1)*10;
-     EEPROM.commit();
-        delay(5);
- 
-    if(i=="73")
-       {
-        digitalWrite(25, HIGH);
-        EEPROM.write(3,EEPROM.read(3)+1);
-        EEPROM.commit();
-        delay(5);
+      a3=a3-1;
         
-        if(1>EEPROM.read(3))
+        if(0>a3)
         {
-       EEPROM.write(3,1);
-       EEPROM.commit();
-        delay(5);
+       a3=0;
        
         }
-      
-        if(EEPROM.read(3)>11)
-       {
-        EEPROM.write(3,11);  
-        EEPROM.commit();
-        delay(5);
+      if(0==a3)
+        {
+       a333=0;
+       
+        } 
+      if(a3>0)
+        {
+       a333=(a3*5)+60;
+       
         }
-    //   vTaskDelay(40/portTICK_PERIOD_MS );
-     //  aa3=(EEPROM.read(3)-1)*10;
-        Serial2.print("n4.val=");  // This is sent to the nextion display to set what object name (before the dot) and what atribute (after the dot) are you going to change.
-        Serial2.print(aa3);
-        Serial2.write(0xff);  // We always have to send this three lines after each command sent to the nextion display.
-        Serial2.write(0xff);
-        Serial2.write(0xff);
-         digitalWrite(25, 0);
-      }
-
-  ///temperture
-
-    if(i=="74")
-      { 
-       digitalWrite(25, HIGH);
-       EEPROM.write(4,EEPROM.read(4)-1);
-       EEPROM.commit();
-        delay(5);
-    //   vTaskDelay(40/portTICK_PERIOD_MS );
-      //  aa4=(EEPROM.read(4)-1)*10;
-        Serial2.print("n13.val=");  // This is sent to the nextion display to set what object name (before the dot) and what atribute (after the dot) are you going to change.
-        Serial2.print(aa4);
-        Serial2.write(0xff);  // We always have to send this three lines after each command sent to the nextion display.
-        Serial2.write(0xff);
-        Serial2.write(0xff);
-        digitalWrite(25, 0);
+     a33= a3 * 10;
      
+     //  vTaskDelay(40/portTICK_PERIOD_MS );
+        //lamp11=(lamp1-1)*10;
+       Serial2.print("n4.val=");  // This is sent to the nextion display to set what object name (before the dot) and what atribute (after the dot) are you going to change.
+       Serial2.print(a33);
+       Serial2.write(0xff);  // We always have to send this three lines after each command sent to the nextion display.
+       Serial2.write(0xff);
+       Serial2.write(0xff);
+       ledcWrite(3, a333);
+       
+
        }
-     aa4=(EEPROM.read(4)-1)*10;
-     EEPROM.commit();
-        delay(5);
-    if(i=="75")
-       {
-        digitalWrite(25, HIGH);
-        EEPROM.write(4,EEPROM.read(4)+1);
-        EEPROM.commit();
-        delay(5);
-     //   vTaskDelay(40/portTICK_PERIOD_MS );
-        //aa4=(EEPROM.read(4)-1)*10;
-        Serial2.print("n13.val=");  // This is sent to the nextion display to set what object name (before the dot) and what atribute (after the dot) are you going to change.
-        Serial2.print(aa4);
-        Serial2.write(0xff);  // We always have to send this three lines after each command sent to the nextion display.
-        Serial2.write(0xff);
-        Serial2.write(0xff);
-       digitalWrite(25, 0);
-      }
- ////////////
-      ////
-      if(1>=EEPROM.read(4))
+      
+       // delay(5);
+    if(i=="73")
+        { 
+       
+       a3=a3+1;
+        
+        if(a3>10)
         {
-       EEPROM.write(4,1);
-       EEPROM.commit();
-        delay(5);
+       a3=10;
        
         }
-      
-        if(EEPROM.read(4)>11)
-       {
-        EEPROM.write(4,11);  
-        EEPROM.commit();
-        delay(5);
+      if(0==a3)
+        {
+       a333=0;
+       
+        } 
+      if(a3>0)
+        {
+       a333=(a3*5)+60;
+       
         }
+     a33= a3 * 10;
+     
+     //  vTaskDelay(40/portTICK_PERIOD_MS );
+        //lamp11=(lamp1-1)*10;
+       Serial2.print("n4.val=");  // This is sent to the nextion display to set what object name (before the dot) and what atribute (after the dot) are you going to change.
+       Serial2.print(a33);
+       Serial2.write(0xff);  // We always have to send this three lines after each command sent to the nextion display.
+       Serial2.write(0xff);
+       Serial2.write(0xff);
+       ledcWrite(3, a333);
 
        }
+    }
 
-     lp1=lamp22 * 2.55;
-     lp2=lamp11 * 2.55;
-    ledcWrite(5, lp1);
-    ledcWrite(6, lp2);
-
+     
    potValue = analogRead(potPin);
   // potValue1 = analogRead(potPin1);
-    if (potValue > 650) 
+    if (potValue <2000) 
     {
-     ledcWrite(7, 0);
+     ledcWrite(7, a1);
    
     }
-     if (potValue <= 650) 
+     if (potValue >= 2000) 
     {
     
-      ledcWrite(7, a1);
+      ledcWrite(7, 0);
     }
 
-   
- 
-   if (digitalRead(36)== HIGH) {
+   if (digitalRead(36)== HIGH )
+   {
     // turn LED on:
-    ledcWrite(1, a2);
+    ledcWrite(1, 255);
+    
   }
-     if (digitalRead(36)== 0) {
+     if (digitalRead(36)== 0)
+     {
     // turn LED on:
-    ledcWrite(1, 0);
+    ledcWrite(1,0);
+    
   }
      if (digitalRead(39)== HIGH) {
     // turn LED on:
-    ledcWrite(2, a3);
+    ledcWrite(2, a2);
   }
      if (digitalRead(39)== 0) {
     // turn LED on:
@@ -990,14 +1172,11 @@ void Task2code( void * pvParameters ){
   }
 
 
-  
-        a1=((EEPROM.read(1)-1)*20)+ 55;
-      
-        a2=((EEPROM.read(2)-1)*20)+ 55;
-
-        a3=((EEPROM.read(3)-1)*20)+ 55;
-       
-        a4=((EEPROM.read(3)-1)*20)+ 55;
+    
+        a1=((EEPROM.read(1)-1)*15)+ 105;
+        a2=((EEPROM.read(2)-1)*10)+ 155;
+       // a3=((EEPROM.read(3)-1)*4)+ 60;
+       // a4=((EEPROM.read(4)-1)*15)+ 105;
   }
 }
 
